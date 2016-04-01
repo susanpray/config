@@ -1,0 +1,70 @@
+root@wangshaojuan-106:/susan/MySQL-python-1.2.3# python setup.py build
+sh: 1: mysql_config: not found
+Traceback (most recent call last):
+  File "setup.py", line 15, in <module>
+    metadata, options = get_config()
+  File "/susan/MySQL-python-1.2.3/setup_posix.py", line 43, in get_config
+    libs = mysql_config("libs_r")
+  File "/susan/MySQL-python-1.2.3/setup_posix.py", line 24, in mysql_config
+    raise EnvironmentError("%s not found" % (mysql_config.path,))
+EnvironmentError: mysql_config not found
+
+
+
+只要原因是没有安装:libmysqlclient-dev
+
+sudo apt-get install libmysqlclient-dev
+找到mysql_config文件的路径
+
+sudo updatedb
+locate mysql_config
+mysql_config的位置为：/usr/bin/mysql_config
+
+在mysql-python源码包下找到：setup_posix.py 文件，然后找到文件中的 mysql_config.path 将其值改为：/usr/bin/mysql_config,然后 sudo python setup.py install ,就ok了
+
+=====================================
+
+root@wangshaojuan-106:/susan/MySQL-python-1.2.3# python setup.py build
+running build
+running build_py
+copying MySQLdb/release.py -> build/lib.linux-x86_64-2.7/MySQLdb
+running build_ext
+building '_mysql' extension
+x86_64-linux-gnu-gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -fPIC -Dversion_info=(1,2,3,'final',0) -D__version__=1.2.3 -I/usr/include/mysql -I/usr/include/python2.7 -c _mysql.c -o build/temp.linux-x86_64-2.7/_mysql.o -DBIG_JOINS=1 -fno-strict-aliasing -g -DNDEBUG
+In file included from _mysql.c:29:0:
+pymemcompat.h:10:20: fatal error: Python.h: No such file or directory
+ #include "Python.h"
+                    ^
+compilation terminated.
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+
+通过安装如下库即可解决：
+
+sudo apt-get install python-dev
+
+
+
+root@wangshaojuan-106:/susan/MySQL-python-1.2.3# python setup.py build
+running build
+running build_py
+copying MySQLdb/release.py -> build/lib.linux-x86_64-2.7/MySQLdb
+running build_ext
+building '_mysql' extension
+x86_64-linux-gnu-gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -fPIC -Dversion_info=(1,2,3,'final',0) -D__version__=1.2.3 -I/usr/include/mysql -I/usr/include/python2.7 -c _mysql.c -o build/temp.linux-x86_64-2.7/_mysql.o -DBIG_JOINS=1 -fno-strict-aliasing -g -DNDEBUG
+In file included from _mysql.c:36:0:
+/usr/include/mysql/my_config.h:422:0: warning: "HAVE_WCSCOLL" redefined [enabled by default]
+ #define HAVE_WCSCOLL
+ ^
+In file included from /usr/include/python2.7/pyconfig.h:3:0,
+                 from /usr/include/python2.7/Python.h:8,
+                 from pymemcompat.h:10,
+                 from _mysql.c:29:
+/usr/include/x86_64-linux-gnu/python2.7/pyconfig.h:911:0: note: this is the location of the previous definition
+ #define HAVE_WCSCOLL 1
+ ^
+x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -Wl,-z,relro -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -D_FORTIFY_SOURCE=2 -g -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security build/temp.linux-x86_64-2.7/_mysql.o -L/usr/lib/x86_64-linux-gnu -lmysqlclient_r -lpthread -lz -lm -ldl -o build/lib.linux-x86_64-2.7/_mysql.so
+
+
+
+===============
+sudo python setup.py install

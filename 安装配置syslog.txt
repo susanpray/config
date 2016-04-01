@@ -1,0 +1,30 @@
+
+
+
+========动作 syslog =====
+syslog server 192.168.24.106  port 514
+syslog server 192.168.24.101  port 514
+syslog server 192.168.24.157  port 514
+syslog server 192.168.24.181  port 514
+
+root@wangshaojuan-106:/var/log# tail -f /var/log/syslog
+
+
+
+
+apt-get install rsyslog
+
+/etc/rsyslog.conf
+
+# provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun 514
+
+添加
+#Cisco Syslog messages  
+local2.debug    /var/log/cisco.log  
+$AllowedSender UDP, 127.0.0.1 , 192.168.24.101 
+#这里是你的cisco设备ip
+
+service rsyslog stop 
+service rsyslog start

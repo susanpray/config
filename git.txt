@@ -1,0 +1,182 @@
+
+============安装配置============================
+
+sudo apt-get update
+
+sudo apt-get install git
+
+wget https://github.com/git/git/archive/master.zip -o git.zip
+
+sudo apt-get install zip
+
+unzip master.zip
+
+cd git-*
+
+apt-get install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+
+make prefix=/usr/local all
+
+sudo make prefix=/usr/local install
+
+git config --global user.name "susanpray"
+
+git config --global user.email "susanpray@hotmail.com"
+
+git config --list
+
+编辑配置信息
+
+nano ~/.gitconfig
+
+ssh-keygen -C 'susanpray@hotmail.com' -t rsa
+
+cat /root/.ssh/id_rsa.pub
+
+上传公钥
+在 github.com 的界面中 选择右上角的 Account Settings，然后选择 SSH Public Keys ，选择新加。
+
+Title 可以随便命名，Key 的内容拷贝自 ~/.ssh/id_rsa.pub 中的内容，完成后，可以再使用
+
+ssh -v git@github.com
+
+进行测试。看到下面的信息表示验证成功。
+
+============使用============================
+mkdir -p ~/git/testing
+cd ~/git/testing
+
+touch testing（随便创建一个文件）
+
+git init
+
+git add .
+
+git commit -m "Initial Commit" -a
+
+git remote add origin ssh://github.com/susanpray/python
+
+git remote -v
+
+git commit -m "Initial Commit" calend.py （commit 指定文件）
+
+git commit -m "Commit2" -a  （全部）
+
+git status
+
+git pull https://github.com/susanpray/python master
+
+echo *.class>.gitignore
+
+git push https://github.com/susanpray/python master
+
+git push origin master
+
+
+============添加文件后更新到github============================
+/root/git/testing
+
+git add .
+git commit -m "Commit3“ -a
+git push origin master
+
+
+
+==================Git 常用命令================================================
+
+1.创建一个新的repository：
+
+先在github上创建并写好相关名字，描述。
+
+$cd ~/coredump        
+
+$git init                     //初始化
+
+$git add .                   //把所有文件加入到索引（不想把所有文件加入，可以用gitignore或add 具体文件)
+
+$git commit               //提交到本地仓库，然后会填写更新日志( -m “更新日志”也可)
+
+$git remote add origin https://github.com/JGCheng/coredump.git       //增加到remote
+
+$git push origin master    //push到github上
+
+2.更新项目（新加了文件）：
+
+$cd ~/coredump
+
+$git add .                  //这样可以自动判断新加了哪些文件，或者手动加入文件名字
+
+$git commit              //提交到本地仓库
+
+$git push origin master    //不是新创建的，不用再add 到remote上了
+
+3.更新项目（没新加文件，只有删除或者修改文件）：
+
+$cd ~/coredump
+
+$git commit -a          //记录删除或修改了哪些文件
+
+$git push origin master  //提交到github
+
+4.忽略一些文件，比如*.o等:
+
+$cd ~/coredump
+
+$vim .gitignore     //把文件类型加入到.gitignore中，保存
+
+然后就可以git add . 能自动过滤这种文件
+
+5.clone代码到本地：
+
+$git clone https://github.com/JGCheng/coredump.git
+
+假如本地已经存在了代码，而仓库里有更新，把更改的合并到本地的项目：
+
+$git fetch origin    //获取远程更新
+
+$git merge origin/master //把更新的内容合并到本地分支
+
+6.撤销
+
+$git reset
+
+7.删除
+
+$git rm  * // 不是用rm 
+
+
+
+错误：
+
+1. 在执行
+
+   $  git remote add origin  https://github.com/JGCheng/coredump-under-Linux.git
+
+    错误提示：fatal: remote origin already exists.
+
+    解决办法：
+
+    $ git remote rm origin
+
+    然后在执行：$ git remote add originhttps://github.com/JGCheng/coredump-under-Linux.git 就不会报错误了
+
+
+
+2.
+
+    $ git push origin master
+
+    错误提示：error:failed to push som refs to.......
+
+    解决办法：
+
+    $ git pull origin master //先把远程服务器github上面的文件拉先来，再push 上去
+
+
+
+
+
+
+
+
+

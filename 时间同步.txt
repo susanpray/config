@@ -1,0 +1,42 @@
+﻿
+
+dmidecode |grep -i uuid
+
+
+license在服务器上保存方式：
+/polydata/lic/sysid/uuid.lic
+说明：
+sysid：子系统id
+ 01---网络安全 
+ 02---邮件系统
+ 03---数据安全
+ 04---SOC
+uuid：子系统所在机器的uuid，查看命令：dmidecode |grep -i uuid
+
+
+sshfs root@192.168.25.42:/polydata/data/pcap /pcap11
+
+
+
+时间同步
+root@polyhawk-57testtest:/# ps -ef| grep ntp
+root      7507  6382  0 09:11 pts/5    00:00:00 grep --color=auto ntp
+ntp      17301     1  0 Mar15 ?        00:00:05 /usr/sbin/ntpd -p /var/run/ntpd.pid -g -u 111:117
+root@polyhawk-57testtest:/# kill -9 17301
+root@polyhawk-57testtest:/# ps -ef| grep ntp
+root      7574  6382  0 09:11 pts/5    00:00:00 grep --color=auto ntp
+root@polyhawk-57testtest:/# ntpdate cn.pool.ntp.org
+16 Mar 09:12:05 ntpdate[7581]: step time server 110.75.186.248 offset 1.247458 sec
+
+root@polyhawk-57testtest:/# hwclock -w --systohc
+root@polyhawk-57testtest:/# date
+Wed Mar 16 09:12:55 IRST 2016
+root@polyhawk-57testtest:/# ntpdate cn.pool.ntp.org
+16 Mar 09:13:16 ntpdate[8315]: adjust time server 110.75.186.248 offset 0.001360 sec
+root@polyhawk-57testtest:/# hwclock -w --systohc
+root@polyhawk-57testtest:/# date
+Wed Mar 16 09:14:02 IRST 2016
+root@polyhawk-57testtest:/# 
+
+修改时区
+root@polyhawk-57testtest:/# dpkg-reconfigure tzdata
