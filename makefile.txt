@@ -1,0 +1,65 @@
+=========================================
+
+1.target=test
+2.objs=a.o b.o
+3.a.o : a.c
+4.    gcc -c a.c -o a.o
+5.b.o : b.c
+6.    gcc -c b.c -o b.o
+7.
+8.$target : $objs
+9.    gcc $^ -o $@
+
+这个例子是把a.c b.c编译成一个可执行文件
+： 前后表面依赖关系
+比如 a.o ： a.c 表示a.o 依赖于a.c，下面那条语句就是编译a.c生成a.o
+target: a.o b.o 就是说target 依赖于a.o 和 b.o
+$^ 和 $@都是makefile里的特殊变量
+
+$^ 表示 上一行 : 后面所有的内容
+$@ 表示上一行 ： 前面的东西
+
+
+===========manual=======================
+main:main.o mytool1.o mytool2.o
+gcc -o main.o mytool1.o mytool2.o
+
+main.o:main.c mytool1.h mytool2.h
+gcc -c main.c
+mytool1.o:mytool1.c mytool1.h
+gcc -c mytool1.c
+mytool2.o:mytool2.c mytool2.h
+gcc -c mytool2.c
+==========makefile way1====================
+target = main
+obj = main.o mytool1.o mytool2.o
+$target:$obj
+	gcc -o $@ $^
+	
+main.o:main.c mytool1.h mytool2.h
+	gcc -c $< 	
+mytool1.o:mytool1.c mytool1.h
+	gcc -c $< 	
+mytool2.o:mytool2.c mytool2.h
+	gcc -c $< 	
+==========makefile way2====================
+target = main
+obj = main.o mytool1.o mytool2.o
+$target:$obj
+	gcc -o $@ $^	
+main.o:mytool1.h mytool2.h
+mytool1.o:mytool1.h
+mytool2.o:mytool2.h
+clean:
+	rm $(target) $(objects)
+==========makefile way3====================
+target = main
+obj = main.o mytool1.o mytool2.o
+$target:$obj
+	gcc -o $@ $^	
+.c.o:
+	gcc -c $<
+clean:
+	rm $(target) $(objects)
+
+	
